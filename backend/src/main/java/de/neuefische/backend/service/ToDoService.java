@@ -3,8 +3,6 @@ package de.neuefische.backend.service;
 import de.neuefische.backend.model.ToDo;
 import de.neuefische.backend.model.ToDoInput;
 import de.neuefische.backend.totodao.ToDoDao;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +22,10 @@ public class ToDoService {
     public Optional<List> getAllToDos() {
         return toDoDao.getAllToDos();
 
+    }
+
+    public void deleteById(String id){
+        toDoDao.deleteById(id);
     }
 
     public Optional<ToDo> getToDoByDescription(String description) {

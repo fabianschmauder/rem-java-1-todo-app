@@ -3,11 +3,14 @@ package de.neuefische.backend.totodao;
 import de.neuefische.backend.model.ToDo;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -15,12 +18,21 @@ import java.util.Optional;
 public class ToDoDao {
 
     private ToDo newToDo;
-    private List<ToDo> toDoList =new ArrayList<>();
+    private List<ToDo> toDoList = new ArrayList<>();
 
     public Optional<List> getAllToDos() {
 
         return Optional.of(toDoList);
 
+    }
+
+    public void deleteById(String id){
+
+        Optional<ToDo> deleteToDo = getById(id);
+        if (deleteToDo.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        toDoList.remove(deleteToDo.get());
     }
 
     public ToDo addToDo(String description, String status) {
@@ -30,8 +42,9 @@ public class ToDoDao {
     }
 
     public Optional<ToDo> getById(String id) {
-
-        return null;
+        List<ToDo> newToDoList = toDoList.stream().filter(toDo -> toDo.getId().equals(id)).collect(Collectors.toList());
+        ToDo foundToDo = newToDoList.get(0);
+        return Optional.of(foundToDo);
     }
 
     public Optional<ToDo> getByDescription(String description) {
@@ -45,4 +58,5 @@ public class ToDoDao {
         return null;
 
     }
+
 }

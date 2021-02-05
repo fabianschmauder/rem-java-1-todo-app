@@ -57,4 +57,9 @@ public class ToDoController {
     public ToDo addToDo (@RequestBody ToDoInput toDoInput){
         return toDoService.addToDo(toDoInput);
     }
+
+    @DeleteMapping("todo/{id}")
+    public void deleteToDo (@PathVariable String id ){
+        toDoService.deleteById(id);
+    }
 }
