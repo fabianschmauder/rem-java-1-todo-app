@@ -1,12 +1,13 @@
 package de.neuefische.backend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
 @Data
+@Getter
+@Setter
+
 public class ToDo {
 
     private String id;
@@ -18,6 +19,9 @@ public class ToDo {
         this.description = description;
         this.status = status;
 
+    }
+
+    public ToDo() {
     }
 
 }

@@ -8,12 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 @RestController
 @RequestMapping("api")
 public class ToDoController {
-
 
     ToDoService toDoService;
 
@@ -22,22 +22,12 @@ public class ToDoController {
         this.toDoService = toDoService;
     }
 
-    @GetMapping("all")
-    public List<ToDo> getAllToDos() {
+    @GetMapping("todo")
+    public ToDo[] getAllToDos() {
         if(toDoService.getAllTodos().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return toDoService.getAllTodos().get();
-
-    }
-
-    public ToDo getToDoByDescription(String description) {
-        if(toDoService.getToDoByDescription(description).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        return toDoService.getToDoByDescription(description).get();
-
-
+       return toDoService.getAllTodos().get();
     }
 
     public ToDo getToDoByID(String id) {
@@ -45,22 +35,21 @@ public class ToDoController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return toDoService.getToDoByID(id).get();
-
-    }
-
-    public ToDo getToDoByStatus(String status) {
-        if(toDoService.getToDoByStatus(status).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        return toDoService.getToDoByStatus(status).get();
-
     }
 
     @PostMapping("todo")
     public ToDo addToDo(@RequestBody ToDoInput toDoInput) {
      return toDoService.addToDo(toDoInput);
+    }
 
+    @DeleteMapping("todo/{id}")
+    public void deleteToDo(@PathVariable String id) {
+        toDoService.deleteToDo(id);
+    }
 
+    @PutMapping("todo/{id}")
+    public ToDo advanceStatusOfToDo(@PathVariable String id) {
+       return toDoService.advanceStatusOfToDo(id).get();
     }
 
 }

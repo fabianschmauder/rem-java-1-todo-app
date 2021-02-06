@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ToDoInput {
 
+    private String id;
     private String description;
     private String status;
 

@@ -21,23 +21,13 @@ public class ToDoService {
         this.toDoDB = toDoDB;
     }
 
-    public Optional<List> getAllTodos() {
+    public Optional<ToDo[]> getAllTodos() {
         return toDoDB.getAllTodos();
-    }
-
-    public Optional<ToDo> getToDoByDescription(String name) {
-
-        return toDoDB.getToDoByDescription(name);
     }
 
     public Optional<ToDo> getToDoByID(String id) {
 
         return toDoDB.getToDoByID(id);
-    }
-
-    public Optional<ToDo> getToDoByStatus(String status) {
-
-        return toDoDB.getToDoByStatus(status);
     }
 
     public ToDo addToDo(ToDoInput toDoInput) {
@@ -47,4 +37,11 @@ public class ToDoService {
        return toDoDB.addToDo(description, status);
     }
 
+    public void deleteToDo(String id) {
+        toDoDB.deleteToDo(id);
+    }
+
+    public Optional<ToDo> advanceStatusOfToDo(String id) {
+        return toDoDB.advanceStatusOfToDo(id);
+    }
 }
