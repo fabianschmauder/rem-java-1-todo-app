@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 
 @Repository
@@ -49,5 +50,9 @@ public class TodoDB {
             return Optional.of(foundTodo);
         }
         return Optional.empty();
+    }
+
+    public void deleteTodo(String id) {
+        findById(id).ifPresent(todo -> todos.remove(todo));
     }
 }

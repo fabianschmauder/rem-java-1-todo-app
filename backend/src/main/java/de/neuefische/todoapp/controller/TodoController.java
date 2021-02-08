@@ -43,4 +43,9 @@ public class TodoController {
         return todoService.updateTodo(updatedTodo)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id not found: "+id));
     }
+
+    @DeleteMapping("{id}")
+    public void deleteTodo(@PathVariable String id){
+        todoService.deleteTodo(id);
+    }
 }

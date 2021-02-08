@@ -29,4 +29,8 @@ public class TodoService {
     public Optional<Todo> updateTodo(Todo updatedTodo) {
         return todoDB.updateTodo(updatedTodo);
     }
+
+    public void deleteTodo(String id) {
+        todoDB.deleteTodo(id);
+    }
 }

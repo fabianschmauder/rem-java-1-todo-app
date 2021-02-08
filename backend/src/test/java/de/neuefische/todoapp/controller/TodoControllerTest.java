@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -103,5 +104,18 @@ class TodoControllerTest {
         Todo expectedTodo = new Todo("976f37f4-8aa7-481d-ad2c-2120613f3347","Write tests", Status.IN_PROGRESS );
         assertThat(response.getBody(), is(expectedTodo));
         assertThat(todoDB.findById(expectedTodo.getId()).get(), is(expectedTodo));
+    }
+
+    @Test
+    @DisplayName("DElETE to /api/todo/<id> deletes the todo")
+    public void deleteTodo(){
+        // GIVEN
+        todoDB.addTodo(new Todo("976f37f4-8aa7-481d-ad2c-2120613f3347","Write tests", Status.OPEN ));
+
+        // WHEN
+        restTemplate.delete(getUrl()+"/976f37f4-8aa7-481d-ad2c-2120613f3347");
+
+        // THEN
+        assertTrue(todoDB.findById("976f37f4-8aa7-481d-ad2c-2120613f3347").isEmpty());
     }
 }
