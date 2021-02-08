@@ -20,4 +20,8 @@ public class TodoService {
     public List<Todo> getTodos() {
         return todoDB.getAllTodos();
     }
+
+    public Todo addTodo(Todo todoToAdd) {
+        return todoDB.addTodo(todoToAdd);
+    }
 }

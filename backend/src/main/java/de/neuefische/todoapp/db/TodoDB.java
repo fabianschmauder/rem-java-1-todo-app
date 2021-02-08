@@ -34,4 +34,8 @@ public class TodoDB {
     public Optional<Todo> findById(String id){
         return todos.stream().filter(todo -> todo.getId().equals(id)).findAny();
     }
+
+    public void clear(){
+        todos.clear();
+    }
 }

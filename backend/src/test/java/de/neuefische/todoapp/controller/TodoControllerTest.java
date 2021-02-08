@@ -1,12 +1,16 @@
 package de.neuefische.todoapp.controller;
 
 import de.neuefische.todoapp.db.TodoDB;
+import de.neuefische.todoapp.model.AddTodoDto;
 import de.neuefische.todoapp.model.Status;
 import de.neuefische.todoapp.model.Todo;
+import de.neuefische.todoapp.util.IdUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -14,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TodoControllerTest {
@@ -30,6 +35,14 @@ class TodoControllerTest {
 
     @Autowired
     private TodoDB todoDB;
+
+    @MockBean
+    private IdUtil idUtil;
+
+    @BeforeEach
+    public void clearDB(){
+        todoDB.clear();
+    }
 
     @Test
     @DisplayName("GET to /api/todo returns list with todos")
@@ -49,6 +62,23 @@ class TodoControllerTest {
                 new Todo("61084198-b1b7-4d7c-837c-62f458ce765a","Drink coffee", Status.OPEN ),
                 new Todo("4f5cf145-d5f7-430f-8e0e-048ea3c1fc687","Buy milk", Status.OPEN )
         ));
+    }
+
+    @Test
+    @DisplayName("POST to /api/todos adds a new todo to the database")
+    public void addTodo(){
+        // GIVEN
+        AddTodoDto todoToPost = new AddTodoDto("Write tests", Status.IN_PROGRESS);
+        when(idUtil.generateId()).thenReturn("some-id");
+
+        // WHEN
+        ResponseEntity<Todo> response = restTemplate.postForEntity(getUrl(), todoToPost, Todo.class);
+
+        // THEN
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        Todo expectedTodo = new Todo("some-id","Write tests", Status.IN_PROGRESS);
+        assertThat(response.getBody(), is(expectedTodo));
+        assertThat(todoDB.findById(expectedTodo.getId()).get(), is(expectedTodo));
     }
 
 }
