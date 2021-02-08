@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -81,4 +83,25 @@ class TodoControllerTest {
         assertThat(todoDB.findById(expectedTodo.getId()).get(), is(expectedTodo));
     }
 
+    @Test
+    @DisplayName("PUT to /api/todo/<id> updates the todo")
+    public void updateTodo(){
+        // GIVEN
+        todoDB.addTodo(new Todo("976f37f4-8aa7-481d-ad2c-2120613f3347","Write tests", Status.OPEN ));
+        Todo updatedTodo = new Todo("976f37f4-8aa7-481d-ad2c-2120613f3347","Write tests", Status.IN_PROGRESS );
+
+        // WHEN
+        HttpEntity<Todo> requestEntity = new HttpEntity<>(updatedTodo);
+        ResponseEntity<Todo> response = restTemplate.exchange(
+                getUrl()+"/976f37f4-8aa7-481d-ad2c-2120613f3347",
+                HttpMethod.PUT,
+                requestEntity,
+                Todo.class);
+
+        // THEN
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        Todo expectedTodo = new Todo("976f37f4-8aa7-481d-ad2c-2120613f3347","Write tests", Status.IN_PROGRESS );
+        assertThat(response.getBody(), is(expectedTodo));
+        assertThat(todoDB.findById(expectedTodo.getId()).get(), is(expectedTodo));
+    }
 }

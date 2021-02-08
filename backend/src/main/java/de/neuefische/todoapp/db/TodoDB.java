@@ -38,4 +38,16 @@ public class TodoDB {
     public void clear(){
         todos.clear();
     }
+
+    public Optional<Todo> updateTodo(Todo updatedTodo) {
+        Optional<Todo> optionalTodo = findById(updatedTodo.getId());
+
+        if(optionalTodo.isPresent()){
+            Todo foundTodo = optionalTodo.get();
+            foundTodo.setStatus(updatedTodo.getStatus());
+            foundTodo.setDescription(updatedTodo.getDescription());
+            return Optional.of(foundTodo);
+        }
+        return Optional.empty();
+    }
 }

@@ -5,7 +5,10 @@ import de.neuefische.todoapp.model.Todo;
 import de.neuefische.todoapp.model.TodoFactory;
 import de.neuefische.todoapp.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -32,4 +35,12 @@ public class TodoController {
         return todoService.addTodo(todoFactory.createTodo(dto));
     }
 
+    @PutMapping("{id}")
+    public Todo updateTodo(@PathVariable String id, @RequestBody Todo updatedTodo){
+        if(!id.equals(updatedTodo.getId())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ids do not match");
+        }
+        return todoService.updateTodo(updatedTodo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id not found: "+id));
+    }
 }
