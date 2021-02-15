@@ -1,11 +1,31 @@
+import { useState } from 'react'
 import styled from 'styled-components/macro'
 import Button from './Button'
 
-export default function AddNewTodo() {
+export default function AddNewTodo({ onAdd }) {
+  const [description, setDescription] = useState('')
+
+  const hasDescription = description.length > 0
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    if (!hasDescription) {
+      return
+    }
+    onAdd(description)
+    setDescription('')
+  }
+
   return (
-    <Wrapper>
-      <input type="text" />
-      <Button primary>Add</Button>
+    <Wrapper onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={description}
+        onChange={(event) => setDescription(event.target.value)}
+      />
+      <Button primary disabled={!hasDescription}>
+        Add
+      </Button>
     </Wrapper>
   )
 }

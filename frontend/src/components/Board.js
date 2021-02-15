@@ -1,14 +1,14 @@
 import styled from 'styled-components/macro'
 import Todo from './Todo'
 
-export default function Board({ todos, title }) {
+export default function Board({ todos, title, onDelete }) {
   return (
     <Wrapper>
       <h2>{title}</h2>
       <ul>
         {todos.map((todo) => (
           <li key={todo.id}>
-            <Todo todo={todo} />
+            <Todo todo={todo} onDelete={onDelete} />
           </li>
         ))}
       </ul>
