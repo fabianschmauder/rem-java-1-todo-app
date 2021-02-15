@@ -1,40 +1,16 @@
 import styled from 'styled-components/macro'
+import Board from './Board'
 
-export default function Boards() {
+export default function Boards({ todos }) {
+  const open = todos.filter((todo) => todo.status === 'OPEN')
+  const inProgress = todos.filter((todo) => todo.status === 'IN_PROGRESS')
+  const done = todos.filter((todo) => todo.status === 'DONE')
+
   return (
     <Wrapper>
-      <section>
-        <h2>Todo</h2>
-        <ul>
-          <li>Item 1</li>
-          <li>Item 2</li>
-          <li>Item 3</li>
-          <li>Item 4</li>
-          <li>Item 5</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>doing</h2>
-        <ul>
-          <li>Item 1</li>
-          <li>Item 2</li>
-          <li>Item 3</li>
-          <li>Item 4</li>
-          <li>Item 5</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Done</h2>
-        <ul>
-          <li>Item 1</li>
-          <li>Item 2</li>
-          <li>Item 3</li>
-          <li>Item 4</li>
-          <li>Item 5</li>
-        </ul>
-      </section>
+      <Board title="Todo" todos={open} />
+      <Board title="Doing" todos={inProgress} />
+      <Board title="Done" todos={done} />
     </Wrapper>
   )
 }

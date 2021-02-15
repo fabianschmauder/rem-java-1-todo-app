@@ -1,9 +1,11 @@
 import styled from 'styled-components/macro'
+import Button from './Button'
 
 export default function AddNewTodo() {
   return (
     <Wrapper>
-      <input type="text" /> <button>Add</button>
+      <input type="text" />
+      <Button primary>Add</Button>
     </Wrapper>
   )
 }
