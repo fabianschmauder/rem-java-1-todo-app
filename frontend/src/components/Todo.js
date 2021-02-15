@@ -1,12 +1,16 @@
 import styled from 'styled-components/macro'
 import Button from './Button'
 
-export default function Todo({ todo, onDelete }) {
+export default function Todo({ todo, onDelete, onAdvance }) {
   return (
     <Wrapper>
       <Description>{todo.description}</Description>
       <Button onClick={() => onDelete(todo)}>Delete</Button>
-      <Button primary>Advance</Button>
+      {onAdvance && (
+        <Button primary onClick={() => onAdvance(todo)}>
+          Advance
+        </Button>
+      )}
     </Wrapper>
   )
 }

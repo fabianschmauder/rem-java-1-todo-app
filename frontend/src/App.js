@@ -3,6 +3,7 @@ import AddNewTodo from './components/AddNewTodo'
 import AppHeader from './components/AppHeader'
 import Boards from './components/Boards'
 import PageLayout from './components/PageLayout'
+import { advanceStatus } from './services/advanceStatus'
 import * as todoApi from './services/todoApi'
 
 export default function App() {
@@ -27,10 +28,23 @@ export default function App() {
     })
   }
 
+  const advanceTodo = (todoToAdvance) => {
+    const advancedTodo = {
+      ...todoToAdvance,
+      status: advanceStatus(todoToAdvance.status),
+    }
+    todoApi.putTodo(advancedTodo).then((updatedTodo) => {
+      const updatedTodos = todos.map((todo) =>
+        todo.id === updatedTodo.id ? updatedTodo : todo
+      )
+      setTodos(updatedTodos)
+    })
+  }
+
   return (
     <PageLayout>
       <AppHeader />
-      <Boards todos={todos} onDelete={deleteTodo} />
+      <Boards todos={todos} onDelete={deleteTodo} onAdvance={advanceTodo} />
       <AddNewTodo onAdd={addTodo} />
     </PageLayout>
   )
