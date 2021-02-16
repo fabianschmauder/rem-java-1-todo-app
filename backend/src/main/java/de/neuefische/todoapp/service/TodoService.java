@@ -33,4 +33,8 @@ public class TodoService {
     public void deleteTodo(String id) {
         todoDB.deleteTodo(id);
     }
+
+    public Optional<Todo> getById(String id) {
+        return todoDB.findById(id);
+    }
 }
