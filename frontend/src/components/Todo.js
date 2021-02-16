@@ -1,37 +1,27 @@
-import React from 'react';
-import styled from 'styled-components';
-import {useHistory} from 'react-router-dom';
+import styled from 'styled-components/macro'
+import Button from './Button'
 
-export default function Todo({ id, status, description, onAdvance, showButtons=true }) {
-
-    const history = useHistory()
-
-    return (
-        <StyledTodo>
-            <h3>
-                {description} <small>[{status}]</small>
-            </h3>
-            {showButtons && <ButtonGroup>
-                {status !== 'DONE' && (
-                    <button
-                        onClick={() => onAdvance({id, description, status})}
-                    >
-                        Advance
-                    </button>
-                )}
-                <button onClick={() => history.push(`/delete/${id}`)}>Delete</button>
-            </ButtonGroup>}
-        </StyledTodo>
-    );
+export default function Todo({ todo, onDelete, onAdvance }) {
+  return (
+    <Wrapper>
+      <Description>{todo.description}</Description>
+      <Button onClick={() => onDelete(todo)}>Delete</Button>
+      {onAdvance && (
+        <Button primary onClick={() => onAdvance(todo)}>
+          Advance
+        </Button>
+      )}
+    </Wrapper>
+  )
 }
 
-const StyledTodo = styled.section`
-    padding: 8px;
-    border: 1px solid salmon;
-    border-radius: 8px;
-`;
+const Wrapper = styled.section`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 8px;
+`
 
-const ButtonGroup = styled.section`
-    display: flex;
-    justify-content: space-between;
-`;
+const Description = styled.span`
+  grid-column: span 2;
+  font-weight: 600;
+`

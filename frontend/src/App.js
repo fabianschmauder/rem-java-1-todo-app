@@ -1,39 +1,51 @@
-import React from 'react';
-import styled from 'styled-components/macro';
-import TodoList from './components/TodoList';
-import useTodos from './hooks/useTodos';
-import useSearch from "./hooks/useSearch";
-import {Switch, Route, Redirect} from "react-router-dom";
-import Header from "./components/Header";
-import Navigation from "./components/Navigation";
-import DeleteConfirmation from "./components/DeleteConfirmation";
+import { useEffect, useState } from 'react'
+import AddNewTodo from './components/AddNewTodo'
+import AppHeader from './components/AppHeader'
+import Boards from './components/Boards'
+import PageLayout from './components/PageLayout'
+import { advanceStatus } from './services/advanceStatus'
+import * as todoApi from './services/todoApi'
 
 export default function App() {
-    const [todos, create, remove, advance] = useTodos();
-    const [search, setSearch, filteredTodos] = useSearch(todos);
+  const [todos, setTodos] = useState([])
 
-    return (
-        <Main>
-            <Header create={create} search={search} onSearch={setSearch}/>
-            <Switch>
-                <Route exact path="/">
-                    <Redirect to="/board/open"/>
-                </Route>
-                <Route path="/board/:status">
-                    <TodoList todos={filteredTodos} onAdvance={advance} />
-                </Route>
-                <Route path="/delete/:id">
-                    <DeleteConfirmation onDelete={remove} todos={todos}/>
-                </Route>
-            </Switch>
-            <Navigation />
-        </Main>
-    );
+  useEffect(() => {
+    todoApi.getTodos().then((loadedTodos) => setTodos(loadedTodos))
+  }, [])
+
+  const addTodo = (description) => {
+    const newTodoDto = { description, status: 'OPEN' }
+    todoApi.postTodo(newTodoDto).then((newTodo) => {
+      const updatedTodos = [...todos, newTodo]
+      setTodos(updatedTodos)
+    })
+  }
+
+  const deleteTodo = (todoToDelete) => {
+    todoApi.deleteTodo(todoToDelete).then(() => {
+      const updatedTodos = todos.filter((todo) => todo.id !== todoToDelete.id)
+      setTodos(updatedTodos)
+    })
+  }
+
+  const advanceTodo = (todoToAdvance) => {
+    const advancedTodo = {
+      ...todoToAdvance,
+      status: advanceStatus(todoToAdvance.status),
+    }
+    todoApi.putTodo(advancedTodo).then((updatedTodo) => {
+      const updatedTodos = todos.map((todo) =>
+        todo.id === updatedTodo.id ? updatedTodo : todo
+      )
+      setTodos(updatedTodos)
+    })
+  }
+
+  return (
+    <PageLayout>
+      <AppHeader />
+      <Boards todos={todos} onDelete={deleteTodo} onAdvance={advanceTodo} />
+      <AddNewTodo onAdd={addTodo} />
+    </PageLayout>
+  )
 }
-
-const Main = styled.main`
-    height: 100vh;
-    padding: 0 24px;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-`;
