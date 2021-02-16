@@ -4,7 +4,7 @@ import Button from './Button'
 export default function Todo({ todo, onDelete, onAdvance }) {
   return (
     <Wrapper>
-      <Description>{todo.description}</Description>
+      <Description>Description: {todo.description}</Description>
       <Button onClick={() => onDelete(todo)}>Delete</Button>
       {onAdvance && (
         <Button primary onClick={() => onAdvance(todo)}>
