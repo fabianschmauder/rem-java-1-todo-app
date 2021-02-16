@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components/macro'
-import Button from './Button'
+import {Button} from "@material-ui/core";
+
 
 export default function AddNewTodo({ onAdd }) {
   const [description, setDescription] = useState('')
@@ -23,9 +24,7 @@ export default function AddNewTodo({ onAdd }) {
         value={description}
         onChange={(event) => setDescription(event.target.value)}
       />
-      <Button primary disabled={!hasDescription}>
-        Add
-      </Button>
+      <Button color="primary" disabled={!hasDescription}>Add</Button>
     </Wrapper>
   )
 }
