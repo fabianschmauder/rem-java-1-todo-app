@@ -3,8 +3,10 @@ import AddNewTodo from './components/AddNewTodo'
 import AppHeader from './components/AppHeader'
 import Boards from './components/Boards'
 import PageLayout from './components/PageLayout'
+import TodoDetails from './components/TodoDetails'
 import { advanceStatus } from './services/advanceStatus'
 import * as todoApi from './services/todoApi'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 export default function App() {
   const [todos, setTodos] = useState([])
@@ -42,10 +44,23 @@ export default function App() {
   }
 
   return (
-    <PageLayout>
-      <AppHeader />
-      <Boards todos={todos} onDelete={deleteTodo} onAdvance={advanceTodo} />
-      <AddNewTodo onAdd={addTodo} />
-    </PageLayout>
+    <Router>
+      <Switch>
+        <Route exact path="/">
+          <PageLayout>
+            <AppHeader />
+            <Boards
+              todos={todos}
+              onDelete={deleteTodo}
+              onAdvance={advanceTodo}
+            />
+            <AddNewTodo onAdd={addTodo} />
+          </PageLayout>
+        </Route>
+        <Route path="/todo/:id">
+          <TodoDetails />
+        </Route>
+      </Switch>
+    </Router>
   )
 }
