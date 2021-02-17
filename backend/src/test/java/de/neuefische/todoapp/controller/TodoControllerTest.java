@@ -68,6 +68,38 @@ class TodoControllerTest {
     }
 
     @Test
+    @DisplayName("GET to /api/todo/{id} should return todo item")
+    public void getTodoById(){
+        // GIVEN
+        todoDB.addTodo(new Todo("976f37f4-8aa7-481d-ad2c-2120613f3347","Write tests", Status.OPEN ));
+        todoDB.addTodo(new Todo("61084198-b1b7-4d7c-837c-62f458ce765a","Drink coffee", Status.OPEN ));
+        todoDB.addTodo(new Todo("4f5cf145-d5f7-430f-8e0e-048ea3c1fc687","Buy milk", Status.OPEN ));
+
+        // WhEN
+        ResponseEntity<Todo> response = restTemplate.getForEntity(getUrl()+"/61084198-b1b7-4d7c-837c-62f458ce765a", Todo.class);
+
+        // THEN
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody(), is(new Todo("61084198-b1b7-4d7c-837c-62f458ce765a","Drink coffee", Status.OPEN )));
+    }
+
+
+    @Test
+    @DisplayName("GET to /api/todo/{id} should return 404 when item is not present")
+    public void getTodoById404(){
+        // GIVEN
+        todoDB.addTodo(new Todo("976f37f4-8aa7-481d-ad2c-2120613f3347","Write tests", Status.OPEN ));
+        todoDB.addTodo(new Todo("61084198-b1b7-4d7c-837c-62f458ce765a","Drink coffee", Status.OPEN ));
+        todoDB.addTodo(new Todo("4f5cf145-d5f7-430f-8e0e-048ea3c1fc687","Buy milk", Status.OPEN ));
+
+        // WhEN
+        ResponseEntity<Void> response = restTemplate.getForEntity(getUrl()+"/unknown", Void.class);
+
+        // THEN
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+    }
+
+    @Test
     @DisplayName("POST to /api/todos adds a new todo to the database")
     public void addTodo(){
         // GIVEN
